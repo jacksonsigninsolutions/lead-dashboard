@@ -155,11 +155,12 @@ with colD:
         .reindex(status_order)
         .dropna()
     )
-    status_df = status_counts.reset_index().rename(columns={"Lead 18-Digit ID": "Lead Count"})
-    styled_status = status_df.style.format({"Lead Count": "{:,.0f}"}).apply(
-        lambda x: ['background-color: #27ae60; color: white' if v > 1000 else '' for v in x] if x.name == "Lead Count" else '', axis=0
+    st.dataframe(
+        status_df.style.format({"Lead Count": "{:,.0f}"}),
+        use_container_width=True,
+        hide_index=True
     )
-    st.dataframe(styled_status, use_container_width=True, hide_index=True)
+
 
 # --- Opportunity Stage Summary ---
 st.markdown("### Opportunity Stage Summary")
@@ -177,8 +178,11 @@ stage_table = (
     .reindex(stage_order)
     .dropna(how='all')
 )
-styled_stage = stage_table.style.format({
-    "ARR Delta (converted)": "${:,.0f}",
-    "Lead Count": "{:,}"
-}).applymap(lambda v: 'background-color: #f39c12; color: black' if isinstance(v, (int, float)) and v > 500 else '')
-st.dataframe(styled_stage, use_container_width=True, hide_index=True)
+st.dataframe(
+    stage_table.style.format({
+        "ARR Delta (converted)": "${:,.0f}",
+        "Lead Count": "{:,}"
+    }),
+    use_container_width=True,
+    hide_index=True
+)

@@ -18,9 +18,9 @@ scope = [
     'https://www.googleapis.com/auth/drive'
 ]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    'atomic-marking-459714-u1-403efc274868.json', scope
-)
+# Load credentials from Streamlit secrets (already a dictionary)
+service_account_info = st.secrets["gcp_service_account"]
+creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
 
 client = gspread.authorize(creds)
 

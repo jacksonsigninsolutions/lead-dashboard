@@ -178,7 +178,9 @@ stage_table = (
     .rename(columns={"Lead 18-Digit ID": "Lead Count"})
     .reindex(stage_order)
     .dropna(how='all')
+    .reset_index()  # <--- This line adds the Stage column back as a column
 )
+
 st.dataframe(
     stage_table.style.format({
         "ARR Delta (converted)": "${:,.0f}",

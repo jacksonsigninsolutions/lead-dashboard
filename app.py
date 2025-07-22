@@ -155,6 +155,7 @@ with colD:
         .reindex(status_order)
         .dropna()
     )
+    status_df = status_counts.reset_index().rename(columns={"Lead 18-Digit ID": "Lead Count"})
     st.dataframe(
         status_df.style.format({"Lead Count": "{:,.0f}"}),
         use_container_width=True,

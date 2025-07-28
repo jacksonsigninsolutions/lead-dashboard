@@ -131,14 +131,14 @@ top_campaigns_table = (
 st.dataframe(top_campaigns_table.style.format({"Lead Count": "{:,}"}), use_container_width=True, hide_index=True)
 
 # --- Qualified + Status Tables ---
-colC, colD = st.columns(2)
+colC, colD = st.columns([1, 1.3])  # Make pie chart column smaller than table column
 
 with colC:
     st.markdown("### Qualified vs Not Qualified")
     qualified_counts = df.groupby("Is Qualified")["Lead 18-Digit ID"].nunique()
 
-    # Smaller figure
-    fig3, ax3 = plt.subplots(figsize=(2.5, 2.5))
+    # Make overall chart size smaller
+    fig3, ax3 = plt.subplots(figsize=(2, 2))  # Reduce figure size further
 
     qualified_counts.plot.pie(
         autopct=lambda p: f'{p:.1f}%\n({int(p * sum(qualified_counts) / 100)})',
@@ -147,7 +147,9 @@ with colC:
     )
 
     ax3.set_ylabel("")
-    plt.tight_layout(pad=0.2)  # reduce padding
+    plt.tight_layout(pad=0.1)  # Reduce outer padding
+
+    # Display the smaller chart without container stretching
     st.pyplot(fig3, use_container_width=False)
 
 with colD:

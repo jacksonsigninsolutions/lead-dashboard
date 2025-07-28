@@ -8,6 +8,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
 st.set_page_config(page_title="Lead Dashboard", layout="wide")
+st.title("2025 Leads and Campaigns Dashboard")
 
 # --- Google Sheets Setup ---
 scope = [
@@ -46,16 +47,10 @@ leads_w_opps["Is Qualified"] = leads_w_opps["Qualified Date"].notna().map({True:
 # Classification
 def classify_account(row):
     segment = row["Segment"]
-    workflow = row["ZI Workflow"]
-    source = row["Lead Source"]
-    if segment in ["Mid Market", "Mass Market"] and pd.notna(workflow):
-        return "SMB Net New"
-    elif segment in ["Mid Market", "Mass Market"] and source == "Expansion Readiness":
-        return "SMB Expansion"
-    elif segment == "Enterprise" and pd.notna(workflow):
-        return "ENT Net New"
-    elif segment == "Enterprise" and source == "Expansion Readiness":
-        return "ENT Expansion"
+    if segment in ["Mid Market", "Mass Market"]:
+        return "SMB"
+    elif segment == "Enterprise":
+        return "ENT"
     else:
         return "Unclassified"
 

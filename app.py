@@ -135,24 +135,31 @@ colC, colD = st.columns([1, 1.3])  # Make pie chart column smaller than table co
 
 colC, colD = st.columns([1, 1.3])  # Keep same column width ratio
 
+colC, colD = st.columns([1, 1.3])  # keep the layout balanced
+
 with colC:
     st.markdown("### Qualified vs Not Qualified")
     qualified_counts = df.groupby("Is Qualified")["Lead 18-Digit ID"].nunique()
 
-    # Smaller chart size
+    # Create smaller figure
     fig3, ax3 = plt.subplots(figsize=(2, 2))
 
-    # Adjust font size for labels & percentage text
+    # Draw pie chart with labels
     wedges, texts, autotexts = ax3.pie(
         qualified_counts,
+        labels=qualified_counts.index,   # <-- add labels back
         autopct=lambda p: f'{p:.1f}%\n({int(p * sum(qualified_counts) / 100)})',
         startangle=90,
-        textprops={'fontsize': 8}  # <-- set smaller font for labels
+        textprops={'fontsize': 8}        # sets base fontsize
     )
 
-    # Optionally adjust % text size even smaller
+    # Adjust percentage/autotext font size
     for autotext in autotexts:
         autotext.set_fontsize(7)
+
+    # Adjust label (Qualified/Not Qualified) font size
+    for text in texts:
+        text.set_fontsize(8)
 
     ax3.set_ylabel("")
     plt.tight_layout(pad=0.1)

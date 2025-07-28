@@ -131,18 +131,22 @@ top_campaigns_table = (
 st.dataframe(top_campaigns_table.style.format({"Lead Count": "{:,}"}), use_container_width=True, hide_index=True)
 
 # --- Qualified + Status Tables ---
-colC, colD = st.columns(2)
 with colC:
     st.markdown("### Qualified vs Not Qualified")
     qualified_counts = df.groupby("Is Qualified")["Lead 18-Digit ID"].nunique()
-    fig3, ax3 = plt.subplots(figsize=(2.5, 2.5))
+    
+    # Create a smaller figure
+    fig3, ax3 = plt.subplots(figsize=(2.5, 2.5))  # smaller figure size
+    
     qualified_counts.plot.pie(
         autopct=lambda p: f'{p:.1f}%\n({int(p * sum(qualified_counts) / 100)})',
         startangle=90,
         ax=ax3
     )
+    
     ax3.set_ylabel("")
-    st.pyplot(fig3)
+    plt.tight_layout(pad=0.2)   # reduce padding around the chart
+    st.pyplot(fig3, use_container_width=False)  # don't stretch it
 
 with colD:
     st.markdown("### Lead Count by Status")

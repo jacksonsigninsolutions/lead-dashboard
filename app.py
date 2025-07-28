@@ -60,7 +60,10 @@ leads_w_opps["Account Classification"] = leads_w_opps.apply(classify_account, ax
 st.sidebar.header("Filters")
 lead_owner = st.sidebar.selectbox("Lead Owner", ["All"] + sorted(leads_w_opps["Lead Owner"].dropna().unique()))
 sub_industry = st.sidebar.selectbox("ZI Sub-Industry", ["All"] + sorted(leads_w_opps["ZI Sub-Industry"].dropna().unique()))
-month = st.sidebar.selectbox("Created Month", ["All"] + sorted(leads_w_opps["Created Month"].dropna().unique()))
+month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
+               'August', 'September', 'October', 'November', 'December']
+months_available = [m for m in month_order if m in leads_w_opps["Created Month"].dropna().unique()]
+month = st.sidebar.selectbox("Created Month", ["All"] + months_available)
 classification = st.sidebar.selectbox("Account Classification", ["All"] + sorted(leads_w_opps["Account Classification"].dropna().unique()))
 
 # --- Apply Filters ---

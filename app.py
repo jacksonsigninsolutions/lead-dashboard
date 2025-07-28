@@ -135,7 +135,7 @@ colC, colD = st.columns(2)
 with colC:
     st.markdown("### Qualified vs Not Qualified")
     qualified_counts = df.groupby("Is Qualified")["Lead 18-Digit ID"].nunique()
-    fig3, ax3 = plt.subplots(figsize=(4, 4))
+    fig3, ax3 = plt.subplots(figsize=(2.5, 2.5))
     qualified_counts.plot.pie(
         autopct=lambda p: f'{p:.1f}%\n({int(p * sum(qualified_counts) / 100)})',
         startangle=90,
@@ -182,7 +182,7 @@ stage_table = (
 st.dataframe(
     stage_table.style.format({
         "ARR Delta (converted)": "${:,.0f}",
-        "Lead Count": "{:,}"
+        "Lead Count": "{:,.0f}"   # force 0 decimal places
     }),
     use_container_width=True,
     hide_index=True

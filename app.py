@@ -134,25 +134,31 @@ with colB:
 
     fig2, ax2 = plt.subplots(figsize=(6, 3))
 
+    # Plot horizontal bar chart
     top_sources[::-1].plot(kind="barh", color="#2ecc71", ax=ax2)
 
+    # Add labels at end of each bar
     for i, v in enumerate(top_sources[::-1].values):
         ax2.text(
-            v + 0.5,
+            v + (max(top_sources.values) * 0.02),  # offset slightly after bar
             i,
-            str(int(v)),
+            f"{int(v):,}",  # format with commas
             va="center",
             fontsize=9
         )
 
-    # Fix X axis limits so it's consistent
+    # Fix x-axis ticks: integers, clean spacing
     max_x = max(top_sources.values) if len(top_sources) > 0 else 1
-    ax2.set_xlim(0, max_x * 1.3)
+    ax2.set_xlim(0, max_x * 1.2)
 
-    # Remove decimals from ticks
-    ax2.set_xticks(range(0, int(max_x * 1.3) + 1, max(1, int(max_x // 5))))
-    ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{int(x)}"))
+    # Tick step: split into ~5 intervals (no decimals)
+    step = max(1, int(max_x // 5))
+    ax2.set_xticks(range(0, int(max_x * 1.2) + 1, step))
 
+    # Format x-axis ticks with commas
+    ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{int(x):,}"))
+
+    # Remove extra labels
     ax2.set_xlabel("")
     ax2.set_ylabel("")
     ax2.grid(axis="x", linestyle="--", alpha=0.7)

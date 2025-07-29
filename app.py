@@ -147,23 +147,14 @@ with colB:
             fontsize=9
         )
 
-    # Define max value and x-axis limit
+    # Define x-axis limit
     max_x = max(top_sources.values) if len(top_sources) > 0 else 1
     ax2.set_xlim(0, max_x * 1.2)
 
-    # Calculate a "clean" interval: 100, 500, 1000, etc.
-    if max_x <= 10:
-        step = 1
-    elif max_x <= 100:
-        step = 10
-    elif max_x <= 1000:
-        step = 100
-    else:
-        step = 1000
+    # Calculate a step so we have only ~4-6 ticks
+    step = max(1, int((max_x * 1.2) / 5))
 
     ax2.set_xticks(range(0, int(max_x * 1.2) + step, step))
-
-    # Remove commas and format as integers
     ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{int(x)}"))
 
     # Clean up chart

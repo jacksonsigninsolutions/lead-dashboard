@@ -94,20 +94,28 @@ col3.metric("Closed Won Rate", f"{closed_won_rate:.2f}%")
 
 # --- Leads Created + Lead Sources ---
 colA, colB = st.columns(2)
+
 with colA:
     st.markdown("### Leads Created by Month")
     monthly = df.groupby("Created Month")["Lead 18-Digit ID"].nunique()
-    ordered_months = ['January', 'February', 'March', 'April', 'May', 'June',
-                      'July', 'August', 'September', 'October', 'November', 'December']
+    ordered_months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
     monthly = monthly.reindex([m for m in ordered_months if m in monthly.index])
 
     fig1, ax1 = plt.subplots(figsize=(6, 3))
+
     sns.lineplot(x=monthly.index, y=monthly.values, marker='o', ax=ax1)
 
     # Dynamic label positioning and smaller font
     for i, v in enumerate(monthly.values):
-        offset = max(monthly.values) * 0.05  # 5% of the max value as offset
+        offset = (max(monthly.values) * 0.05) if len(monthly) > 0 else 1
         ax1.text(i, v + offset, str(int(v)), ha='center', fontsize=8)
+
+    # Fix Y axis limits so it matches bar chart height (avoid dynamic shrink)
+    max_y = max(monthly.values) if len(monthly) > 0 else 1
+    ax1.set_ylim(0, max_y * 1.3)  # add buffer so labels don't get cut off
 
     ax1.set_ylabel("Lead Count")
     ax1.grid(True)
@@ -116,7 +124,7 @@ with colA:
     st.pyplot(fig1)
 
 with colB:
-    st.markdown("### Top 5 Lead Sources")
+    st.markdown("### Top Lead Sources")
     top_sources = (
         df.groupby("Lead Source")["Lead 18-Digit ID"]
         .nunique()
@@ -124,20 +132,32 @@ with colB:
         .head(5)
     )
 
-    fig2, ax2 = plt.subplots(figsize=(6, 3))  # Fixed size
+    fig2, ax2 = plt.subplots(figsize=(6, 3))
+
     top_sources[::-1].plot(kind="barh", color="#2ecc71", ax=ax2)
 
-    # Add labels to bars
     for i, v in enumerate(top_sources[::-1].values):
-        ax2.text(v + 0.5, i, str(int(v)), va="center", fontsize=8)
+        ax2.text(
+            v + 0.5,
+            i,
+            str(int(v)),
+            va="center",
+            fontsize=9
+        )
 
-    # Fix margins so bars don't get cramped when there's little data
-    ax2.set_xlim(0, max(top_sources.values) * 1.2 if len(top_sources) > 0 else 1)
+    # Fix X axis limits so it's consistent
+    max_x = max(top_sources.values) if len(top_sources) > 0 else 1
+    ax2.set_xlim(0, max_x * 1.3)
+
+    # Remove decimals from ticks
+    ax2.set_xticks(range(0, int(max_x * 1.3) + 1, max(1, int(max_x // 5))))
+    ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{int(x)}"))
+
     ax2.set_xlabel("")
     ax2.set_ylabel("")
     ax2.grid(axis="x", linestyle="--", alpha=0.7)
-
     plt.tight_layout()
+
     st.pyplot(fig2)
 
 # --- Top Campaigns ---

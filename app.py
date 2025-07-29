@@ -117,11 +117,27 @@ with colA:
 
 with colB:
     st.markdown("### Top 5 Lead Sources")
-    top_sources = df.groupby("Lead Source")["Lead 18-Digit ID"].nunique().sort_values(ascending=False).head(5)
-    fig2, ax2 = plt.subplots(figsize=(6, 3))
+    top_sources = (
+        df.groupby("Lead Source")["Lead 18-Digit ID"]
+        .nunique()
+        .sort_values(ascending=False)
+        .head(5)
+    )
+
+    fig2, ax2 = plt.subplots(figsize=(6, 3))  # Fixed size
     top_sources[::-1].plot(kind="barh", color="#2ecc71", ax=ax2)
+
+    # Add labels to bars
     for i, v in enumerate(top_sources[::-1].values):
-        ax2.text(v + 5, i, str(int(v)), va='center')
+        ax2.text(v + 0.5, i, str(int(v)), va="center", fontsize=8)
+
+    # Fix margins so bars don't get cramped when there's little data
+    ax2.set_xlim(0, max(top_sources.values) * 1.2 if len(top_sources) > 0 else 1)
+    ax2.set_xlabel("")
+    ax2.set_ylabel("")
+    ax2.grid(axis="x", linestyle="--", alpha=0.7)
+
+    plt.tight_layout()
     st.pyplot(fig2)
 
 # --- Top Campaigns ---

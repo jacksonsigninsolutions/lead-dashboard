@@ -137,28 +137,36 @@ with colB:
     # Plot horizontal bar chart
     top_sources[::-1].plot(kind="barh", color="#2ecc71", ax=ax2)
 
-    # Add labels at end of each bar
+    # Add labels at the end of each bar
     for i, v in enumerate(top_sources[::-1].values):
         ax2.text(
-            v + (max(top_sources.values) * 0.02),  # offset slightly after bar
+            v + (max(top_sources.values) * 0.02),
             i,
-            f"{int(v):,}",  # format with commas
+            str(int(v)),
             va="center",
             fontsize=9
         )
 
-    # Fix x-axis ticks: integers, clean spacing
+    # Define max value and x-axis limit
     max_x = max(top_sources.values) if len(top_sources) > 0 else 1
     ax2.set_xlim(0, max_x * 1.2)
 
-    # Tick step: split into ~5 intervals (no decimals)
-    step = max(1, int(max_x // 5))
-    ax2.set_xticks(range(0, int(max_x * 1.2) + 1, step))
+    # Calculate a "clean" interval: 100, 500, 1000, etc.
+    if max_x <= 10:
+        step = 1
+    elif max_x <= 100:
+        step = 10
+    elif max_x <= 1000:
+        step = 100
+    else:
+        step = 1000
 
-    # Format x-axis ticks with commas
-    ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{int(x):,}"))
+    ax2.set_xticks(range(0, int(max_x * 1.2) + step, step))
 
-    # Remove extra labels
+    # Remove commas and format as integers
+    ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{int(x)}"))
+
+    # Clean up chart
     ax2.set_xlabel("")
     ax2.set_ylabel("")
     ax2.grid(axis="x", linestyle="--", alpha=0.7)

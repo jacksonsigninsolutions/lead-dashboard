@@ -100,12 +100,19 @@ with colA:
     ordered_months = ['January', 'February', 'March', 'April', 'May', 'June',
                       'July', 'August', 'September', 'October', 'November', 'December']
     monthly = monthly.reindex([m for m in ordered_months if m in monthly.index])
+
     fig1, ax1 = plt.subplots(figsize=(6, 3))
     sns.lineplot(x=monthly.index, y=monthly.values, marker='o', ax=ax1)
+
+    # Dynamic label positioning and smaller font
     for i, v in enumerate(monthly.values):
-        ax1.text(i, v + 10, str(int(v)), ha='center')
+        offset = max(monthly.values) * 0.05  # 5% of the max value as offset
+        ax1.text(i, v + offset, str(int(v)), ha='center', fontsize=8)
+
     ax1.set_ylabel("Lead Count")
     ax1.grid(True)
+    plt.tight_layout()
+
     st.pyplot(fig1)
 
 with colB:

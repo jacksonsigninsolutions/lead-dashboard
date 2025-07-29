@@ -123,6 +123,8 @@ with colA:
 
     st.pyplot(fig1)
 
+import math
+
 with colB:
     st.markdown("### Top Lead Sources")
     top_sources = (
@@ -151,9 +153,12 @@ with colB:
     max_x = max(top_sources.values) if len(top_sources) > 0 else 1
     ax2.set_xlim(0, max_x * 1.2)
 
-    # Calculate a step so we have only ~4-6 ticks
-    step = max(1, int((max_x * 1.2) / 5))
+    # Calculate a rounded step (to 1, 10, 100, 1000, etc.)
+    raw_step = (max_x * 1.2) / 5
+    magnitude = 10 ** (len(str(int(raw_step))) - 1)
+    step = math.ceil(raw_step / magnitude) * magnitude  # Round up to nearest clean number
 
+    # Set ticks in clean order (0, step, step*2, etc.)
     ax2.set_xticks(range(0, int(max_x * 1.2) + step, step))
     ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{int(x)}"))
 
